@@ -72,7 +72,7 @@ class Employee(models.Model):
 
     phone = models.CharField(
         max_length=15,
-        unique=True,                        # No two employees can have same number
+        unique=False,                        # No two employees can have same number
         verbose_name="Phone / Mobile"       # Admin panel mein yeh label dikhega
         # Example: "9876543210"
     )

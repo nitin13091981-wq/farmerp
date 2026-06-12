@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Naya Mazdoor</title>
+</head>
+<body>
+
+<h2>👷 Naya Mazdoor</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        Naam<br>
+        <input type="text" name="name" required>
+    </p>
+
+    <p>
+        Phone (Optional)<br>
+        <input type="text" name="phone">
+    </p>
+
+    <p>
+        Aaj ki Mazdoori ₹<br>
+        <input type="number" name="wage" required>
+    </p>
+
+    <button type="submit">
+        Save
+    </button>
+
+</form>
+
+<br>
+
+<a href="/">⬅ Home</a>
+
+</body>
+</html>

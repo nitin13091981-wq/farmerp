@@ -11,48 +11,90 @@
 </head>
 
 <body class="bg-light">
-<form method="POST">
-    {% csrf_token %}
+
 <div class="container mt-3">
 
-    <h2 class="mb-4">
-        📅 आज की हाज़िरी
-    </h2>
+    <form method="POST">
+        {% csrf_token %}
 
-    {% for employee in employees %}
+        <h2 class="mb-4">
+            📅 आज की हाज़िरी
+        </h2>
+
+        {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+        {% for employee in employees %}
 
         <div class="card mb-2">
             <div class="card-body">
 
                 <input
-    type="checkbox"
-    name="employees"
-    value="{{ employee.id }}"
->
+                    type="checkbox"
+                    name="employees"
+                    value="{{ employee.id }}"
+                >
 
-<strong>{{ employee.name }}</strong>
+                <strong>{{ employee.name }}</strong>
 
-<br>
+                <br>
 
-<small class="text-muted">
-    {{ employee.get_employee_type_display }}
-</small>
-
-
+                <small class="text-muted">
+                    {{ employee.get_employee_type_display }}
+                </small>
 
             </div>
         </div>
 
-    {% endfor %}
+        {% endfor %}
+
+        <hr>
+
+        <div class="card">
+            <div class="card-body">
+
+                <h4>➕ नया दिहाड़ी मजदूर</h4>
+
+                <div class="mb-3">
+                    <label class="form-label">नाम</label>
+
+                    <input
+                        type="text"
+                        name="new_name"
+                        class="form-control"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        आज की मजदूरी (₹)
+                    </label>
+
+                    <input
+                        type="number"
+                        name="new_wage"
+                        class="form-control"
+                    >
+                </div>
+
+            </div>
+        </div>
+
+        <button
+            type="submit"
+            class="btn btn-success btn-lg w-100 mt-3"
+        >
+            💾 हाज़िरी सुरक्षित करें
+        </button>
+
+    </form>
 
 </div>
 
-<button class="btn btn-success btn-lg mt-3">
-    हाज़िरी सुरक्षित करें
-</button>
-
-</form>
-
 </body>
-
 </html>
