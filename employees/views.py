@@ -7,11 +7,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 
-@login_required
+#@login_required
 def home(request):
     return render(request, 'home.html')
 
-@login_required
+#@login_required
 def add_labour(request):
 
     if request.method == "POST":
@@ -39,7 +39,7 @@ def dashboard(request):
 
 
 
-@login_required
+#@login_required
 def attendance_entry(request):
 
     if request.method == "POST":
