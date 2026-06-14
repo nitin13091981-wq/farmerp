@@ -28,13 +28,11 @@ def add_labour(request):
                 daily_wage=wage,
                 joining_date=timezone.now().date()
             )
-
-    messages.success(
-        request,
-        f"{name} ko Farm Sahayogi ke roop mein safalta se joda gaya."
-    )
-
-    return redirect('home')
+        messages.success(
+         request,
+            f"{name} ko Farm Sahayogi ke roop mein safalta se joda gaya."
+        )
+        return redirect('home')
 
     return render(request, 'add_labour.html')
 
