@@ -19,9 +19,8 @@ def add_labour(request):
         name = request.POST.get("name")
         wage = request.POST.get("wage")
         phone = request.POST.get("phone")
-
+       
         if name and wage:
-
             Employee.objects.create(
                 name=name,
                 phone=phone if phone else "",
@@ -30,7 +29,12 @@ def add_labour(request):
                 joining_date=timezone.now().date()
             )
 
-            return redirect('add_labour')
+    messages.success(
+        request,
+        f"{name} ko Farm Sahayogi ke roop mein safalta se joda gaya."
+    )
+
+    return redirect('home')
 
     return render(request, 'add_labour.html')
 
