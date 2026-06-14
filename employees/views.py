@@ -96,19 +96,22 @@ def attendance_entry(request):
         }
     )
 def login_view(request):
+
     if request.method == "POST":
+
         username = request.POST.get("username")
         password = request.POST.get("password")
-        user = authenticate(
-            request,
-            username=username,
-            password=password
-        )
-        if user:
-            login(request, user)
+
+        # Temporary Login
+        if username == "admin" and password == "admin123":
+
+            request.session['logged_in'] = True
+
             return redirect('home')
+
         messages.error(
             request,
             "Galat Username ya Password"
         )
+
     return render(request, "login.html")
