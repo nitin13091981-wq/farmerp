@@ -89,7 +89,7 @@ def attendance_entry(request):
         messages.success(request, "हाज़िरी सफलतापूर्वक सुरक्षित हो गई।")
         return redirect('attendance')
 
-    employees = Employee.objects.filter(is_active=True)
+    employees = Employee.objects.filter(is_active=True).exclude(employee_type='permanent')
 
     return render(
         request,
@@ -118,3 +118,41 @@ def login_view(request):
         )
 
     return render(request, "login.html")
+
+
+from django.db.models import Count
+
+def attendance_report(request):
+
+    report = []
+
+    from_date = request.GET.get("from_date")
+    to_date = request.GET.get("to_date")
+
+    if from_date and to_date:
+
+        employees = Employee.objects.filter(is_active=True)
+
+        for emp in employees:
+
+            days = Attendance.objects.filter(
+                employee=emp,
+                date__range=[from_date, to_date]
+            ).count()
+
+            amount = days * emp.daily_wage
+
+            report.append({
+                "name": emp.name,
+                "days": days,
+                "wage": emp.daily_wage,
+                "amount": amount
+            })
+
+    return render(
+        request,
+        "attendance_report.html",
+        {
+            "report": report
+        }
+    )
