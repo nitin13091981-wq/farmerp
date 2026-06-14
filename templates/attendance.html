@@ -16,7 +16,17 @@
 
     <form method="POST">
         {% csrf_token %}
-
+         
+        <div class="mb-3">
+    <label><strong>Attendance Date</strong></label>
+    <input
+    type="date"
+    name="attendance_date"
+    class="form-control"
+    value="{% now 'Y-m-d' %}"
+    required
+>
+</div>
         <h2 class="mb-4">
             📅 आज की हाज़िरी
         </h2>
@@ -33,7 +43,7 @@
 
         <div class="card mb-2">
             <div class="card-body">
-
+           
                 <input
                     type="checkbox"
                     name="employees"

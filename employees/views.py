@@ -44,8 +44,11 @@ def attendance_entry(request):
 
     if request.method == "POST":
 
-        today = timezone.now().date()
-
+        attendance_date = request.POST.get('attendance_date')
+        if attendance_date:
+            today = attendance_date
+        else:
+            today = timezone.now().date()
         # Existing employees attendance
         employee_ids = request.POST.getlist('employees')
 
