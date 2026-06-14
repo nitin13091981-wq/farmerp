@@ -5,7 +5,7 @@ from django.utils import timezone
 from .models import Employee, Attendance
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from datetime import timedelta
 
 #@login_required
 def home(request):
@@ -130,7 +130,14 @@ def attendance_report(request):
 
     from_date = request.GET.get("from_date")
     to_date = request.GET.get("to_date")
-
+    employee_id = request.GET.get("employee")
+    today = timezone.now().date()
+    monday = today - timedelta(days=today.weekday())
+    saturday = monday + timedelta(days=5)
+    employees = Employee.objects.filter(
+        is_active=True,
+        employee_type='daily'
+    )
     if from_date and to_date:
 
         employees = Employee.objects.filter(is_active=True)
@@ -155,6 +162,7 @@ def attendance_report(request):
         request,
         "attendance_report.html",
         {
-            "report": report
+            "report": report,
+             "employees": employees
         }
     )

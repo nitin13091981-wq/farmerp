@@ -21,14 +21,39 @@
 ```
 <div class="col-md-4">
     <label>From Date</label>
-    <input type="date" name="from_date" class="form-control">
+    <input
+    type="date"
+    name="from_date"
+    value="{{ from_date }}"
+    class="form-control">
 </div>
 
 <div class="col-md-4">
     <label>To Date</label>
-    <input type="date" name="to_date" class="form-control">
+    <input
+    type="date"
+    name="to_date"
+    value="{{ to_date }}"
+    class="form-control">
 </div>
 
+<div class="col-md-4">
+    <label>Farm Sahayogi</label>
+
+    <select name="employee" class="form-control">
+
+        <option value="">
+            Sabhi Farm Sahayogi
+        </option>
+
+        {% for emp in employees %}
+        <option value="{{ emp.id }}">
+            {{ emp.name }}
+        </option>
+        {% endfor %}
+
+    </select>
+</div>
 <div class="col-md-4">
     <br>
     <button class="btn btn-success">
@@ -66,7 +91,15 @@
 
 </tbody>
 ```
+<tr class="table-success">
+    <td colspan="3">
+        <strong>Total Payment</strong>
+    </td>
 
+    <td>
+        <strong>₹ {{ total_amount }}</strong>
+    </td>
+</tr>
 </table>
 
 </body>
