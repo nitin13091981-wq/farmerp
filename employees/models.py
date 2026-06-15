@@ -71,14 +71,13 @@ class Employee(models.Model):
     )
 
     phone = models.CharField(
-        max_length=15,
-        unique=False,                        # No two employees can have same number
-        verbose_name="Phone / Mobile"       # Admin panel mein yeh label dikhega
-        # Example: "9876543210"
+        max_length=25,
+        blank=True,
+        default=""
     )
 
     alternate_phone = models.CharField(
-        max_length=15,
+        max_length=2,
         blank=True,                         # This field is optional / Yeh field optional hai
         verbose_name="Alternate Phone / Doosra Number"
     )

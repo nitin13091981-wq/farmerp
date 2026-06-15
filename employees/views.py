@@ -77,7 +77,7 @@ def attendance_entry(request):
 
             employee = Employee.objects.create(
                 name=new_name,
-                phone=f"TEMP-{today}-{new_name}",
+                phone="TEMP",
                 employee_type='daily',
                 daily_wage=new_wage,
                 joining_date=today
