@@ -75,6 +75,17 @@ def attendance_entry(request):
 
         if new_name and new_wage:
 
+            wage = request.POST.get(f"wage_{emp_id}")
+
+            Attendance.objects.get_or_create(
+            employee=employee,
+            date=today,
+            defaults={
+                'status': 'full',
+                'actual_wage': wage
+                }
+            )
+
             employee = Employee.objects.create(
                 name=new_name,
                 phone="TEMP",

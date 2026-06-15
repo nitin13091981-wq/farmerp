@@ -224,6 +224,12 @@ class Employee(models.Model):
 
 class Attendance(models.Model):
 
+    actual_wage = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        default=0
+    )
+
     # -------------------------------------------------------------------------
     # STATUS CHOICES - What type of day was it?
     # STATUS CHOICES - Din kaisa tha?
