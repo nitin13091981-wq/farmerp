@@ -1,111 +1,127 @@
-<!DOCTYPE html>
-
-<html lang="hi">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-<title>FarmerP</title>
+<title>FarmerP - कृषि प्रबंधन प्रणाली</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+{% include 'navbar.html' %}
 
-</head>
+<div class="text-center mb-5">
 
-<body class="bg-light">
-
-<div class="container py-4">
-
-
-<div class="text-center mb-4">
-
-    <h1 class="fw-bold text-success">
+    <h1 class="display-4 fw-bold text-success">
         🌾 FarmerP
     </h1>
 
-    <p class="text-muted">
-        Farm Management System
+    <p class="lead text-muted">
+        कृषि सहयोगी उपस्थिति, पारिश्रमिक एवं फार्म प्रबंधन प्रणाली
     </p>
+
+    <hr class="w-50 mx-auto">
 
 </div>
 
 <div class="row g-4">
 
+    <!-- Attendance -->
+
     <div class="col-md-4">
 
-        <div class="card shadow-sm h-100 border-0">
-            <div class="card-body text-center">
+        <div class="card shadow border-0 h-100">
 
-                <h1>📅</h1>
+            <div class="card-body text-center p-4">
 
-                <h4>Attendance</h4>
+                <div style="font-size:70px;">
+                    📅
+                </div>
+
+                <h4 class="fw-bold mt-3">
+                    दैनिक उपस्थिति
+                </h4>
 
                 <p class="text-muted">
-                    Aaj ki haziri lagayein
+                     सहयोगियों की उपस्थिति एवं पारिश्रमिक दर्ज करें।
                 </p>
 
                 <a href="/attendance/"
-                   class="btn btn-success w-100">
-                    Open
+                   class="btn btn-success btn-lg w-100">
+                    उपस्थिति दर्ज करें
                 </a>
 
             </div>
+
         </div>
 
     </div>
 
+    <!-- Employee -->
+
     <div class="col-md-4">
 
-        <div class="card shadow-sm h-100 border-0">
-            <div class="card-body text-center">
+        <div class="card shadow border-0 h-100">
 
-                <h1>👷</h1>
+            <div class="card-body text-center p-4">
 
-                <h4>Farm Sahayogi</h4>
+                <div style="font-size:70px;">
+                    👨‍🌾
+                </div>
+
+                <h4 class="fw-bold mt-3">
+                     सहयोगी
+                </h4>
 
                 <p class="text-muted">
-                    Naya Farm Sahayogi joden
+                    नए सहयोगी का पंजीकरण करें।
                 </p>
 
                 <a href="/labour/add/"
-                   class="btn btn-primary w-100">
-                    Add
+                   class="btn btn-primary btn-lg w-100">
+                    नया सहयोगी जोड़ें
                 </a>
 
             </div>
+
         </div>
 
     </div>
+
+    <!-- Report -->
 
     <div class="col-md-4">
 
-        <div class="card shadow-sm h-100 border-0">
-            <div class="card-body text-center">
+        <div class="card shadow border-0 h-100">
 
-                <h1>📊</h1>
+            <div class="card-body text-center p-4">
 
-                <h4>Payment Report</h4>
+                <div style="font-size:70px;">
+                    📊
+                </div>
+
+                <h4 class="fw-bold mt-3">
+                    उपस्थिति एवं भुगतान विवरण
+                </h4>
 
                 <p class="text-muted">
-                    Attendance aur payment report
+                    उपस्थिति, पारिश्रमिक एवं भुगतान का विस्तृत विवरण देखें।
                 </p>
 
                 <a href="{% url 'attendance_report' %}"
-                   class="btn btn-warning w-100">
-                    View Report
+                   class="btn btn-warning btn-lg w-100">
+                    विवरण देखें
                 </a>
 
             </div>
+
         </div>
 
     </div>
 
 </div>
 
+<div class="text-center mt-5">
+
+    <div class="alert alert-success shadow-sm">
+
+        🌱 <strong>हमारा उद्देश्य:</strong>
+        कृषि सहयोगियों का सम्मान, पारदर्शी उपस्थिति प्रबंधन एवं समय पर भुगतान।
+
+    </div>
 
 </div>
-
-</body>
-</html>
