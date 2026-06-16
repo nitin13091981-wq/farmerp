@@ -151,44 +151,95 @@ def login_view(request):
 
 from django.db.models import Count
 
-def attendance_report(request):
+from decimal import Decimal
+from datetime import timedelta
+from django.utils import timezone
 
+def attendance_report(request):
     report = []
 
     today = timezone.now().date()
+
     monday = today - timedelta(days=today.weekday())
     saturday = monday + timedelta(days=5)
-    from_date = request.GET.get("from_date", monday)
-    to_date = request.GET.get("to_date", saturday)
+
+    from_date = request.GET.get("from_date")
+    to_date = request.GET.get("to_date")
+    employee_id = request.GET.get("employee")
+
+    if not from_date:
+        from_date = monday
+
+    if not to_date:
+        to_date = saturday
+
     employees = Employee.objects.filter(
-        is_active=True,
-        employee_type='daily'
+        is_active=True
     )
-    if from_date and to_date:
 
-        employees = Employee.objects.filter(is_active=True)
+    if employee_id:
+        employees = employees.filter(id=employee_id)
 
-        for emp in employees:
+    total_amount = Decimal("0")
 
-            days = Attendance.objects.filter(
+    week_dates = []
+
+    current_day = monday
+
+    while current_day <= saturday:
+        week_dates.append(current_day)
+        current_day += timedelta(days=1)
+
+    for emp in employees:
+
+        attendances = Attendance.objects.filter(
+            employee=emp,
+            date__range=[from_date, to_date]
+        )
+
+        days = attendances.count()
+
+        amount = Decimal("0")
+
+        attendance_map = {}
+
+        for day in week_dates:
+
+            att = Attendance.objects.filter(
                 employee=emp,
-                date__range=[from_date, to_date]
-            ).count()
+                date=day
+            ).first()
 
-            amount = days * emp.daily_wage
+            if att:
 
-            report.append({
-                "name": emp.name,
-                "days": days,
-                "wage": emp.daily_wage,
-                "amount": amount
-            })
+                wage = att.actual_wage or emp.daily_wage
+
+                attendance_map[day] = wage
+
+                amount += Decimal(str(wage))
+
+            else:
+
+                attendance_map[day] = None
+
+        total_amount += amount
+
+        report.append({
+            "name": emp.name,
+            "days": days,
+            "amount": amount,
+            "attendance_map": attendance_map
+        })
 
     return render(
         request,
         "attendance_report.html",
         {
             "report": report,
-             "employees": employees
+            "employees": employees,
+            "from_date": from_date,
+            "to_date": to_date,
+            "week_dates": week_dates,
+            "total_amount": total_amount,
         }
     )
