@@ -41,55 +41,53 @@ def dashboard(request):
 
 
 
-#@login_required
-def attendance_entry(request):
 
+def attendance_entry(request):
     if request.method == "POST":
 
-        attendance_date = request.POST.get('attendance_date')
+        attendance_date = request.POST.get("attendance_date")
+
         if attendance_date:
             today = attendance_date
         else:
             today = timezone.now().date()
-        # Existing employees attendance
-        employee_ids = request.POST.getlist('employees')
 
+        employee_ids = request.POST.getlist("employees")
+
+        # Existing Employees
         for emp_id in employee_ids:
 
             employee = Employee.objects.get(id=emp_id)
 
-            Attendance.objects.get_or_create(
+            wage = request.POST.get(
+                f"wage_{emp_id}",
+                employee.daily_wage
+            )
+
+            attendance, created = Attendance.objects.get_or_create(
                 employee=employee,
                 date=today,
                 defaults={
-                    'status': 'full'
+                    "status": "full",
+                    "actual_wage": wage
                 }
             )
 
-        # New labour entry
-        new_name = request.POST.get('new_name')
-        new_wage = request.POST.get('new_wage')
+            if not created:
+                attendance.actual_wage = wage
+                attendance.status = "full"
+                attendance.save()
 
-        print("NAME =", new_name)
-        print("WAGE =", new_wage)
+        # New Employee
+        new_name = request.POST.get("new_name")
+        new_wage = request.POST.get("new_wage")
 
         if new_name and new_wage:
-
-            wage = request.POST.get(f"wage_{emp_id}")
-
-            Attendance.objects.get_or_create(
-            employee=employee,
-            date=today,
-            defaults={
-                'status': 'full',
-                'actual_wage': wage
-                }
-            )
 
             employee = Employee.objects.create(
                 name=new_name,
                 phone="TEMP",
-                employee_type='daily',
+                employee_type="daily",
                 daily_wage=new_wage,
                 joining_date=today
             )
@@ -97,20 +95,36 @@ def attendance_entry(request):
             Attendance.objects.create(
                 employee=employee,
                 date=today,
-                status='full'
+                status="full",
+                actual_wage=new_wage
             )
-        messages.success(request, "हाज़िरी सफलतापूर्वक सुरक्षित हो गई।")
-        return redirect('attendance')
 
-    employees = Employee.objects.filter(is_active=True).exclude(employee_type='permanent')
+        messages.success(
+            request,
+            "उपस्थिति एवं पारिश्रमिक सफलतापूर्वक सुरक्षित कर दिया गया।"
+        )
+
+        return redirect("attendance")
+
+    employees = Employee.objects.filter(
+        is_active=True
+    ).exclude(
+        employee_type="permanent"
+    )
 
     return render(
         request,
-        'attendance.html',
+        "attendance.html",
         {
-            'employees': employees
+            "employees": employees
         }
     )
+
+
+
+
+
+#@login_required
 def login_view(request):
 
     if request.method == "POST":
