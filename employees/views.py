@@ -1,3 +1,5 @@
+from urllib import request
+
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from .models import Employee
@@ -153,12 +155,11 @@ def attendance_report(request):
 
     report = []
 
-    from_date = request.GET.get("from_date")
-    to_date = request.GET.get("to_date")
-    employee_id = request.GET.get("employee")
     today = timezone.now().date()
     monday = today - timedelta(days=today.weekday())
     saturday = monday + timedelta(days=5)
+    from_date = request.GET.get("from_date", monday)
+    to_date = request.GET.get("to_date", saturday)
     employees = Employee.objects.filter(
         is_active=True,
         employee_type='daily'

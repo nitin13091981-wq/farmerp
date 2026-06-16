@@ -4,14 +4,12 @@
 
 <head>
 
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>उपस्थिति एवं भुगतान विवरण</title>
+<title>उपस्थिति एवं पारिश्रमिक विवरण</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
 
 </head>
 
@@ -19,17 +17,17 @@
 
 {% include 'navbar.html' %}
 
-<div class="container py-4">
+<div class="container-fluid py-3">
 
-
+```
 <div class="text-center mb-4">
 
-    <h1 class="fw-bold text-success">
-        📊 उपस्थिति एवं भुगतान विवरण
-    </h1>
+    <h2 class="fw-bold text-success">
+        📊 उपस्थिति एवं पारिश्रमिक विवरण
+    </h2>
 
     <p class="text-muted">
-        सहयोगियों की उपस्थिति, पारिश्रमिक एवं देय भुगतान का विवरण
+        कृषि सहयोगियों की उपस्थिति एवं देय भुगतान का विवरण
     </p>
 
 </div>
@@ -38,65 +36,85 @@
 
     <div class="card-body">
 
-        <form method="GET" class="row g-3">
+        <form method="GET">
 
-            <div class="col-md-4">
+            <div class="row g-3">
 
-                <label class="form-label fw-bold">
-                    📅 प्रारंभ तिथि
-                </label>
+                <div class="col-md-3">
 
-                <input
-                    type="date"
-                    name="from_date"
-                    value="{{ from_date }}"
-                    class="form-control">
+                    <label class="form-label fw-bold">
+                        📅 प्रारंभ तिथि
+                    </label>
 
-            </div>
+                    <input
+                        type="date"
+                        name="from_date"
+                        value="{{ from_date }}"
+                        class="form-control"
+                    >
 
-            <div class="col-md-4">
+                </div>
 
-                <label class="form-label fw-bold">
-                    📅 अंतिम तिथि
-                </label>
+                <div class="col-md-3">
 
-                <input
-                    type="date"
-                    name="to_date"
-                    value="{{ to_date }}"
-                    class="form-control">
+                    <label class="form-label fw-bold">
+                        📅 अंतिम तिथि
+                    </label>
 
-            </div>
+                    <input
+                        type="date"
+                        name="to_date"
+                        value="{{ to_date }}"
+                        class="form-control"
+                    >
 
-            <div class="col-md-4">
+                </div>
 
-                <label class="form-label fw-bold">
-                    👨‍🌾 सहयोगी
-                </label>
+                <div class="col-md-3">
 
-                <select name="employee" class="form-control">
+                    <label class="form-label fw-bold">
+                        👨‍🌾 कृषि सहयोगी
+                    </label>
 
-                    <option value="">
-                        सभी सहयोगी
-                    </option>
+                    <select
+                        name="employee"
+                        class="form-select"
+                    >
 
-                    {% for emp in employees %}
+                        <option value="">
+                            सभी सहयोगी
+                        </option>
 
-                    <option value="{{ emp.id }}">
-                        {{ emp.name }}
-                    </option>
+                        {% for emp in employees %}
 
-                    {% endfor %}
+                        <option
+                            value="{{ emp.id }}"
+                            {% if request.GET.employee == emp.id|stringformat:"s" %}
+                            selected
+                            {% endif %}
+                        >
+                            {{ emp.name }}
+                        </option>
 
-                </select>
+                        {% endfor %}
 
-            </div>
+                    </select>
 
-            <div class="col-12">
+                </div>
 
-                <button class="btn btn-success btn-lg">
-                    🔍 विवरण देखें
-                </button>
+                <div class="col-md-3 d-grid">
+
+                    <label class="form-label">
+                        &nbsp;
+                    </label>
+
+                    <button class="btn btn-success">
+
+                        🔍 विवरण देखें
+
+                    </button>
+
+                </div>
 
             </div>
 
@@ -106,31 +124,74 @@
 
 </div>
 
+<div class="row mb-4">
+
+    <div class="col-6">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">
+                    कुल सहयोगी
+                </h6>
+
+                <h3 class="text-primary">
+                    {{ report|length }}
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-6">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">
+                    कुल भुगतान
+                </h6>
+
+                <h3 class="text-success">
+                    ₹ {{ total_amount }}
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 <div class="card shadow border-0">
 
-    <div class="card-body">
+    <div class="card-header bg-success text-white">
+
+        <strong>
+            📋 भुगतान सारांश
+        </strong>
+
+    </div>
+
+    <div class="card-body p-0">
 
         <div class="table-responsive">
 
-            <table class="table table-hover table-bordered align-middle">
+            <table class="table table-hover align-middle mb-0">
 
-                <thead class="table-success">
+                <thead class="table-light">
 
                     <tr>
 
                         <th>सहयोगी</th>
-
-                        <th class="text-center">
-                            कार्य दिवस
-                        </th>
-
-                        <th class="text-end">
-                            पारिश्रमिक (₹)
-                        </th>
-
-                        <th class="text-end">
-                            कुल भुगतान (₹)
-                        </th>
+                        <th class="text-center">दिन</th>
+                        <th class="text-end">पारिश्रमिक</th>
+                        <th class="text-end">कुल राशि</th>
 
                     </tr>
 
@@ -143,7 +204,11 @@
                     <tr>
 
                         <td>
-                            <strong>{{ row.name }}</strong>
+
+                            <strong>
+                                {{ row.name }}
+                            </strong>
+
                         </td>
 
                         <td class="text-center">
@@ -154,7 +219,7 @@
                             ₹ {{ row.wage }}
                         </td>
 
-                        <td class="text-end">
+                        <td class="text-end fw-bold text-success">
                             ₹ {{ row.amount }}
                         </td>
 
@@ -164,7 +229,7 @@
 
                     <tr>
 
-                        <td colspan="4" class="text-center text-muted">
+                        <td colspan="4" class="text-center text-muted py-4">
 
                             चयनित अवधि के लिए कोई विवरण उपलब्ध नहीं है।
 
@@ -208,19 +273,31 @@
 
 </div>
 
-<div class="alert alert-success mt-4 shadow-sm">
+<div class="card shadow-sm border-0 mt-4">
 
-    🌱 <strong>संदेश:</strong>
-    पारदर्शी उपस्थिति एवं समय पर भुगतान ही सफल टीम की पहचान है।
+    <div class="card-header bg-primary text-white">
+
+        <strong>
+            📅 साप्ताहिक उपस्थिति दृश्य
+        </strong>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="alert alert-info mb-0">
+
+            अगले चरण में यहाँ सोमवार से शनिवार तक का कैलेंडर दृश्य दिखाया जाएगा,
+            जिससे तुरंत पता चलेगा कि किस दिन कौन-सा कृषि सहयोगी उपस्थित था।
+
+        </div>
+
+    </div>
 
 </div>
-
-
-
-
+```
 
 </div>
 
 </body>
-
 </html>
