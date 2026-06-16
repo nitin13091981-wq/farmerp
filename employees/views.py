@@ -181,7 +181,7 @@ def attendance_report(request):
     employees = Employee.objects.filter(
         is_active=True
     )
-
+    employee_id = request.GET.get("employee")
     if employee_id:
         employees = employees.filter(id=employee_id)
 
