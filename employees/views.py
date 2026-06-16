@@ -160,18 +160,23 @@ def attendance_report(request):
 
     today = timezone.now().date()
 
-    monday = today - timedelta(days=today.weekday())
-    saturday = monday + timedelta(days=5)
+    # Monday=0 Tuesday=1 ...
 
-    from_date = request.GET.get("from_date")
-    to_date = request.GET.get("to_date")
-    employee_id = request.GET.get("employee")
+    days_since_tuesday = (today.weekday() - 1) % 7
 
-    if not from_date:
-        from_date = monday
+    tuesday = today - timedelta(days=days_since_tuesday)
 
-    if not to_date:
-        to_date = saturday
+    sunday = tuesday + timedelta(days=5)
+
+    from_date = request.GET.get(
+        "from_date",
+        tuesday.strftime("%Y-%m-%d")
+    )
+
+    to_date = request.GET.get(
+        "to_date",
+        sunday.strftime("%Y-%m-%d")
+    )
 
     employees = Employee.objects.filter(
         is_active=True
@@ -183,10 +188,8 @@ def attendance_report(request):
     total_amount = Decimal("0")
 
     week_dates = []
-
-    current_day = monday
-
-    while current_day <= saturday:
+    current_day = tuesday
+    while current_day <= sunday:
         week_dates.append(current_day)
         current_day += timedelta(days=1)
 
