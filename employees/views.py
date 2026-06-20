@@ -156,82 +156,96 @@ from datetime import timedelta
 from django.utils import timezone
 
 def attendance_report(request):
+
     report = []
 
     today = timezone.now().date()
 
-    # Monday=0 Tuesday=1 ...
+    weekday = today.weekday()
 
-    days_since_tuesday = (today.weekday() - 1) % 7
+    if weekday == 0:
+        start_date = today - timedelta(days=6)
+    else:
+        start_date = today - timedelta(days=(weekday - 1))
 
-    tuesday = today - timedelta(days=days_since_tuesday)
-
-    sunday = tuesday + timedelta(days=5)
+    end_date = start_date + timedelta(days=5)
 
     from_date = request.GET.get(
         "from_date",
-        tuesday.strftime("%Y-%m-%d")
+        start_date.strftime("%Y-%m-%d")
     )
 
     to_date = request.GET.get(
         "to_date",
-        sunday.strftime("%Y-%m-%d")
+        end_date.strftime("%Y-%m-%d")
     )
+
+    employee_id = request.GET.get("employee")
 
     employees = Employee.objects.filter(
         is_active=True
     )
-    employee_id = request.GET.get("employee")
+
     if employee_id:
         employees = employees.filter(id=employee_id)
 
-    total_amount = Decimal("0")
+    from_dt = datetime.strptime(
+        from_date,
+        "%Y-%m-%d"
+    ).date()
+
+    to_dt = datetime.strptime(
+        to_date,
+        "%Y-%m-%d"
+    ).date()
 
     week_dates = []
-    current_day = tuesday
-    while current_day <= sunday:
-        week_dates.append(current_day)
-        current_day += timedelta(days=1)
+
+    current = from_dt
+
+    while current <= to_dt:
+        week_dates.append(current)
+        current += timedelta(days=1)
+
+    total_amount = 0
 
     for emp in employees:
 
-        attendances = Attendance.objects.filter(
-            employee=emp,
-            date__range=[from_date, to_date]
-        )
-
-        days = attendances.count()
-
-        amount = Decimal("0")
-
         attendance_map = {}
+
+        amount = 0
+
+        days = 0
 
         for day in week_dates:
 
-            att = Attendance.objects.filter(
+            attendance = Attendance.objects.filter(
                 employee=emp,
                 date=day
             ).first()
 
-            if att:
+            attendance_map[day] = attendance
 
-                wage = att.actual_wage or emp.daily_wage
+            if attendance:
 
-                attendance_map[day] = wage
+                days += 1
 
-                amount += Decimal(str(wage))
-
-            else:
-
-                attendance_map[day] = None
+                amount += float(
+                    attendance.actual_wage or 0
+                )
 
         total_amount += amount
 
         report.append({
+
             "name": emp.name,
+
             "days": days,
+
             "amount": amount,
-            "attendance_map": attendance_map
+
+            "attendance_map": attendance_map,
+
         })
 
     return render(
@@ -239,10 +253,51 @@ def attendance_report(request):
         "attendance_report.html",
         {
             "report": report,
-            "employees": employees,
+            "employees": Employee.objects.filter(
+                is_active=True
+            ),
+            "week_dates": week_dates,
             "from_date": from_date,
             "to_date": to_date,
-            "week_dates": week_dates,
             "total_amount": total_amount,
         }
     )
+
+
+def edit_attendance(request, id):
+
+    attendance = Attendance.objects.get(id=id)
+
+    if request.method == "POST":
+
+        attendance.actual_wage = request.POST.get(
+            "actual_wage"
+        )
+
+        attendance.save()
+
+        messages.success(
+            request,
+            "उपस्थिति सफलतापूर्वक संशोधित की गई।"
+        )
+
+        return redirect("attendance_report")
+
+    return render(
+        request,
+        "edit_attendance.html",
+        {
+            "attendance": attendance
+        }
+    )
+
+
+def delete_attendance(request, id):
+    attendance = Attendance.objects.get(id=id)
+    attendance.delete()
+    messages.success(
+        request,
+        "उपस्थिति रिकॉर्ड हटाया गया।"
+    )
+    return redirect("attendance_report")
+

@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="hi">
 
 <head>
@@ -14,18 +13,25 @@
 <style>
 
 body{
-    background:#f8f9fa;
-}
-
-.sticky-total{
-    background:#d1e7dd;
-    font-weight:bold;
+    background:#f5f7f5;
 }
 
 .table td,
 .table th{
-    white-space:nowrap;
     vertical-align:middle;
+    white-space:nowrap;
+}
+
+.summary-card{
+    border:none;
+    border-radius:15px;
+}
+
+.quote-box{
+    background:#e8f5e9;
+    border-left:5px solid green;
+    padding:15px;
+    border-radius:10px;
 }
 
 </style>
@@ -38,124 +44,153 @@ body{
 
 <div class="container-fluid py-3">
 
-```
-<div class="text-center mb-4">
+    <div class="text-center mb-4">
 
-    <h2 class="fw-bold text-success">
-        📊 उपस्थिति एवं पारिश्रमिक विवरण
-    </h2>
+        <h2 class="fw-bold text-success">
+            📊 उपस्थिति एवं पारिश्रमिक विवरण
+        </h2>
 
-    <p class="text-muted">
-        कृषि सहयोगियों की साप्ताहिक उपस्थिति एवं भुगतान रिपोर्ट
-    </p>
+        <p class="text-muted">
+            कृषि सहयोगियों के कार्य दिवस एवं पारिश्रमिक का विवरण
+        </p>
 
-</div>
+    </div>
 
-<div class="card shadow-sm border-0 mb-4">
+    <div class="quote-box mb-4">
 
-    <div class="card-body">
+        🌾 <strong>संदेश :</strong>
 
-        <form method="GET">
+        "सम्मान, पारदर्शिता और समय पर पारिश्रमिक —
+        यही सफल कृषि परिवार की पहचान है।"
 
-            <div class="row g-3">
+    </div>
 
-                <div class="col-md-3">
+    <div class="card shadow-sm border-0 mb-4">
 
-                    <label class="form-label fw-bold">
-                        📅 प्रारंभ तिथि
-                    </label>
+        <div class="card-body">
 
-                    <input
-                        type="date"
-                        name="from_date"
-                        value="{{ from_date|date:'Y-m-d' }}"
-                        class="form-control"
-                    >
+            <form method="GET">
 
-                </div>
+                <div class="row g-3">
 
-                <div class="col-md-3">
+                    <div class="col-md-4">
 
-                    <label class="form-label fw-bold">
-                        📅 अंतिम तिथि
-                    </label>
+                        <label class="form-label fw-bold">
+                            📅 प्रारंभ तिथि
+                        </label>
 
-                    <input
-                        type="date"
-                        name="to_date"
-                        value="{{ to_date|date:'Y-m-d' }}"
-                        class="form-control"
-                    >
-
-                </div>
-
-                <div class="col-md-3">
-
-                    <label class="form-label fw-bold">
-                        👨‍🌾 कृषि सहयोगी
-                    </label>
-
-                    <select
-                        name="employee"
-                        class="form-select"
-                    >
-
-                        <option value="">
-                            सभी सहयोगी
-                        </option>
-
-                        {% for emp in employees %}
-
-                        <option
-                            value="{{ emp.id }}"
-                            {% if request.GET.employee == emp.id|stringformat:"s" %}
-                            selected
-                            {% endif %}
+                        <input
+                            type="date"
+                            name="from_date"
+                            value="{{ from_date }}"
+                            class="form-control"
                         >
-                            {{ emp.name }}
-                        </option>
 
-                        {% endfor %}
+                    </div>
 
-                    </select>
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-bold">
+                            📅 अंतिम तिथि
+                        </label>
+
+                        <input
+                            type="date"
+                            name="to_date"
+                            value="{{ to_date }}"
+                            class="form-control"
+                        >
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-bold">
+                            👨‍🌾 कृषि सहयोगी
+                        </label>
+
+                        <select
+                            name="employee"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                सभी सहयोगी
+                            </option>
+
+                            {% for emp in employees %}
+
+                            <option value="{{ emp.id }}">
+
+                                {{ emp.name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-12 d-grid">
+
+                        <button class="btn btn-success btn-lg">
+
+                            🔍 विवरण देखें
+
+                        </button>
+
+                    </div>
 
                 </div>
 
-                <div class="col-md-3 d-grid">
+            </form>
 
-                    <label>&nbsp;</label>
+        </div>
 
-                    <button class="btn btn-success">
+    </div>
 
-                        🔍 रिपोर्ट देखें
+    <div class="row mb-4">
 
-                    </button>
+        <div class="col-6">
+
+            <div class="card summary-card shadow-sm">
+
+                <div class="card-body text-center">
+
+                    <h6 class="text-muted">
+                        कुल सहयोगी
+                    </h6>
+
+                    <h3 class="text-primary">
+
+                        {{ report|length }}
+
+                    </h3>
 
                 </div>
 
             </div>
 
-        </form>
+        </div>
 
-    </div>
+        <div class="col-6">
 
-</div>
+            <div class="card summary-card shadow-sm">
 
-<div class="row mb-4">
+                <div class="card-body text-center">
 
-    <div class="col-6">
+                    <h6 class="text-muted">
+                        कुल भुगतान
+                    </h6>
 
-        <div class="card shadow-sm border-0">
+                    <h3 class="text-success">
 
-            <div class="card-body text-center">
+                        ₹ {{ total_amount }}
 
-                <h6 class="text-muted">
-                    कुल सहयोगी
-                </h6>
+                    </h3>
 
-                <h3 class="text-primary">
-                    {{ report|length }}
-                </h3>
+                </div>
 
             </div>
 
@@ -163,191 +198,149 @@ body{
 
     </div>
 
-    <div class="col-6">
+    <div class="card shadow border-0">
 
-        <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white">
 
-            <div class="card-body text-center">
-
-                <h6 class="text-muted">
-                    कुल भुगतान
-                </h6>
-
-                <h3 class="text-success">
-                    ₹ {{ total_amount }}
-                </h3>
-
-            </div>
+            <strong>
+                📋 कार्य एवं पारिश्रमिक विवरण
+            </strong>
 
         </div>
 
-    </div>
+        <div class="card-body p-0">
 
-</div>
+            <div class="table-responsive">
 
-<div class="card shadow border-0">
+                <table class="table table-bordered table-hover mb-0">
 
-    <div class="card-header bg-success text-white">
+                    <thead class="table-success">
 
-        <strong>
-            📅 साप्ताहिक उपस्थिति कैलेंडर
-        </strong>
+                        <tr>
 
-    </div>
+                            <th>
+                                कृषि सहयोगी
+                            </th>
 
-    <div class="card-body p-0">
+                            <th class="text-center">
+                                कार्य दिवस
+                            </th>
 
-        <div class="table-responsive">
+                            <th class="text-end">
+                                कुल पारिश्रमिक (₹)
+                            </th>
 
-            <table class="table table-bordered table-hover mb-0">
+                        </tr>
 
-                <thead class="table-success">
+                    </thead>
 
-                    <tr>
+                    <tbody>
 
-                        <th>
-                            कृषि सहयोगी
-                        </th>
+                    {% for row in report %}
 
-                        {% for day in week_dates %}
+                        <tr>
 
-                        <th class="text-center">
+                            <td>
 
-                            {{ day|date:"D" }}
+                                <strong>
 
-                            <br>
+                                    {{ row.name }}
 
-                            <small>
+                                </strong>
 
-                                {{ day|date:"d-m" }}
+                                <br>
 
-                            </small>
+                                <small class="text-muted">
 
-                        </th>
+                                    {% for att in row.attendances %}
 
-                        {% endfor %}
+                                        {{ att.date|date:"d M" }}
 
-                        <th class="text-center">
-                            दिन
-                        </th>
+                                        (₹{{ att.actual_wage }})
 
-                        <th class="sticky-total text-end">
-                            कुल भुगतान
-                        </th>
+                                        {% if not forloop.last %}
+                                            |
+                                        {% endif %}
 
-                    </tr>
+                                    {% endfor %}
 
-                </thead>
-
-                <tbody>
-
-                {% for row in report %}
-
-                    <tr>
-
-                        <td>
-
-                            <strong>
-
-                                {{ row.name }}
-
-                            </strong>
-
-                        </td>
-
-                        {% for day,value in row.attendance_map.items %}
-
-                            <td class="text-center">
-
-                                {% if value %}
-
-                                    ₹{{ value }}
-
-                                {% else %}
-
-                                    ❌
-
-                                {% endif %}
+                                </small>
 
                             </td>
 
-                        {% endfor %}
+                            <td class="text-center">
 
-                        <td class="text-center">
+                                {{ row.days }}
 
-                            {{ row.days }}
+                            </td>
 
-                        </td>
+                            <td class="text-end fw-bold text-success">
 
-                        <td class="sticky-total text-end">
+                                ₹ {{ row.amount }}
 
-                            ₹ {{ row.amount }}
+                            </td>
 
-                        </td>
+                        </tr>
 
-                    </tr>
+                    {% empty %}
 
-                {% empty %}
+                        <tr>
 
-                    <tr>
+                            <td colspan="3" class="text-center p-4">
 
-                        <td colspan="20" class="text-center p-4">
+                                कोई विवरण उपलब्ध नहीं है।
 
-                            कोई विवरण उपलब्ध नहीं है।
+                            </td>
 
-                        </td>
+                        </tr>
 
-                    </tr>
+                    {% endfor %}
 
-                {% endfor %}
+                    </tbody>
 
-                </tbody>
+                    <tfoot>
 
-                <tfoot>
+                        <tr class="table-warning">
 
-                    <tr class="table-warning">
+                            <td colspan="2">
 
-                        <td colspan="8">
+                                <strong>
 
-                            <strong>
+                                    💰 कुल देय भुगतान
 
-                                💰 कुल देय भुगतान
+                                </strong>
 
-                            </strong>
+                            </td>
 
-                        </td>
+                            <td class="text-end">
 
-                        <td class="text-end">
+                                <strong>
 
-                            <strong>
+                                    ₹ {{ total_amount }}
 
-                                ₹ {{ total_amount }}
+                                </strong>
 
-                            </strong>
+                            </td>
 
-                        </td>
+                        </tr>
 
-                    </tr>
+                    </tfoot>
 
-                </tfoot>
+                </table>
 
-            </table>
+            </div>
 
         </div>
 
     </div>
 
-</div>
+    <div class="alert alert-success mt-4">
 
-<div class="alert alert-success mt-4">
+        🌱 प्रत्येक सहयोगी का सम्मान, उचित पारिश्रमिक और पारदर्शी लेखा-जोखा हमारी प्राथमिकता है।
 
-    🌾 सभी कृषि सहयोगियों का सम्मानपूर्वक एवं पारदर्शी पारिश्रमिक प्रबंधन।
-
-</div>
-```
+    </div>
 
 </div>
 
 </body>
-
 </html>
