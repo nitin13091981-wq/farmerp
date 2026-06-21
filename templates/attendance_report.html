@@ -229,6 +229,9 @@ body{
                             <th class="text-end">
                                 कुल पारिश्रमिक (₹)
                             </th>
+                            <th class="text-center">
+                            कार्यवाही
+                            </th>
 
                         </tr>
 
@@ -280,7 +283,28 @@ body{
 
                             </td>
 
+                            <td class="text-center">
+
+                                <a
+                                    href="{% url 'edit_attendance' row.id %}"
+                                    class="btn btn-sm btn-primary"
+                                >
+                                    ✏️ संशोधित करें
+                                </a>
+
+                                <a
+                                    href="{% url 'delete_attendance' row.id %}"
+                                    class="btn btn-sm btn-danger"
+                                    onclick="return confirm('क्या आप यह प्रविष्टि हटाना चाहते हैं?')"
+                                >
+                                    🗑️ हटाएँ
+                                </a>
+
+                            </td>
+
                         </tr>
+
+                        
 
                     {% empty %}
 

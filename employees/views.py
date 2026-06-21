@@ -8,6 +8,7 @@ from .models import Employee, Attendance
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta
+from datetime import datetime 
 
 #@login_required
 def home(request):
@@ -236,17 +237,16 @@ def attendance_report(request):
 
         total_amount += amount
 
+
         report.append({
-
+            "id": emp.id,
             "name": emp.name,
-
             "days": days,
-
             "amount": amount,
-
             "attendance_map": attendance_map,
-
         })
+
+        
 
     return render(
         request,
