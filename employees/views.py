@@ -278,9 +278,8 @@ def edit_attendance(request, id):
 
         messages.success(
             request,
-            "उपस्थिति सफलतापूर्वक संशोधित की गई।"
+            f"{attendance.employee.name} का पारिश्रमिक सफलतापूर्वक संशोधित किया गया।"
         )
-
         return redirect("attendance_report")
 
     return render(
@@ -297,7 +296,7 @@ def delete_attendance(request, id):
     attendance.delete()
     messages.success(
         request,
-        "उपस्थिति रिकॉर्ड हटाया गया।"
+        f"{attendance.employee.name} की उपस्थिति रिकॉर्ड हटायी गयी।"
     )
     return redirect("attendance_report")
 
